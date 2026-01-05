@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Mint green background -->
+  <rect width="512" height="512" fill="#5ae6ab"/>
+
+  <!-- HAPI text - large, centered -->
+  <text
+    x="256"
+    y="215"
+    text-anchor="middle"
+    font-family="Helvetica, Arial, sans-serif"
+    font-weight="bold"
+    font-size="145"
+    fill="white"
+    letter-spacing="8">HAPI</text>
+
+  <!-- matic text - sized to match HAPI width -->
+  <text
+    x="256"
+    y="330"
+    text-anchor="middle"
+    font-family="Helvetica, Arial, sans-serif"
+    font-weight="400"
+    font-size="116"
+    fill="white"
+    letter-spacing="6">matic</text>
+</svg>
