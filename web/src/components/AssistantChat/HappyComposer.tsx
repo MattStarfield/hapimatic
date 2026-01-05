@@ -454,7 +454,7 @@ export function HappyComposer(props: {
     ])
 
     return (
-        <div className={`px-3 ${bottomPaddingClass} pt-2 bg-[var(--app-bg)]`}>
+        <div className={`px-3 ${bottomPaddingClass} pt-1 bg-[var(--app-bg)]`}>
             <div className="mx-auto w-full max-w-content">
                 <ComposerPrimitive.Root className="relative">
                     {overlays}
@@ -470,7 +470,7 @@ export function HappyComposer(props: {
                     />
 
                     <div className="overflow-hidden rounded-[20px] bg-[var(--app-secondary-bg)]">
-                        <div className="flex items-center px-4 py-3">
+                        <div className="flex items-center px-4 py-2">
                             <ComposerPrimitive.Input
                                 ref={textareaRef}
                                 autoFocus={!controlsDisabled && !isTouch}

@@ -118,3 +118,37 @@ systemctl --user status hapimatic --no-pager
 - **Always warn user first** about session disconnection (see Server Restart Warning above)
 - If `cp` fails with "Text file busy", use `pkill -9 -f hapimatic` to kill lingering processes
 - Verify service is running after deployment with `systemctl --user status hapimatic`
+
+---
+
+## 🔴 MANDATORY: Playwright Verification Before User Testing
+
+**You MUST verify UI changes with Playwright BEFORE asking the user to test on their device.**
+
+This is a CRITICAL requirement. Do NOT skip this step. The user should NEVER be the first to discover that changes aren't working.
+
+### Required Verification Steps
+
+After deploying any UI changes:
+
+1. **Close any existing browser tabs**: `mcp__playwright__browser_close`
+2. **Navigate fresh**: `mcp__playwright__browser_navigate` to `http://localhost:3007`
+3. **Take a screenshot**: `mcp__playwright__browser_take_screenshot`
+4. **Visually inspect** the screenshot to confirm your changes are visible
+5. **Only then** inform the user that changes are ready for testing
+
+### Common Pitfalls
+
+- **Build caching**: If changes aren't visible, delete `web/dist/` and rebuild
+- **Binary not copied**: Verify timestamps match between `cli/dist-exe/` and `~/.local/bin/hapimatic`
+- **Service not restarted**: The old binary may still be running
+- **Browser caching**: Close Playwright browser and navigate fresh
+
+### Failure to Verify = Wasted User Time
+
+If you skip Playwright verification and ask the user to test, only for them to find the changes aren't working, you have:
+1. Wasted the user's time switching to their phone
+2. Damaged trust in your work quality
+3. Violated this CLAUDE.md directive
+
+**Always verify first. No exceptions.**

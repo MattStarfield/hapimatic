@@ -79,7 +79,7 @@ function SessionsPage() {
 
     return (
         <div className="flex h-full flex-col">
-            <div className="bg-[var(--app-bg)] pt-[env(safe-area-inset-top)]">
+            <div className="bg-[var(--app-bg)]">
                 <div className="mx-auto w-full max-w-content flex items-center justify-between px-3 py-2">
                     <div className="text-xs text-[var(--app-hint)]">
                         {sessions.length} sessions in {projectCount} projects
@@ -205,7 +205,7 @@ function NewSessionPage() {
 
     return (
         <div className="flex-1 overflow-y-auto">
-            <div className="flex items-center gap-2 border-b border-[var(--app-border)] bg-[var(--app-bg)] p-3 pt-[calc(0.75rem+env(safe-area-inset-top))]">
+            <div className="flex items-center gap-2 border-b border-[var(--app-border)] bg-[var(--app-bg)] p-3">
                 {!isTelegramApp() && (
                     <button
                         type="button"

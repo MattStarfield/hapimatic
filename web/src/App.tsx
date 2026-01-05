@@ -17,6 +17,7 @@ import { InstallPrompt } from '@/components/InstallPrompt'
 import { OfflineBanner } from '@/components/OfflineBanner'
 import { SyncingBanner } from '@/components/SyncingBanner'
 import { LoadingState } from '@/components/LoadingState'
+import { BrandedFrame } from '@/components/BrandedFrame'
 
 export function App() {
     const { serverUrl, baseUrl, setServerUrl, clearServerUrl } = useServerUrl()
@@ -189,45 +190,53 @@ export function App() {
     // Loading auth source
     if (isAuthSourceLoading) {
         return (
-            <div className="h-full flex items-center justify-center p-4">
-                <LoadingState label="Loading…" className="text-sm" />
-            </div>
+            <BrandedFrame>
+                <div className="h-full flex items-center justify-center p-4">
+                    <LoadingState label="Loading…" className="text-sm" />
+                </div>
+            </BrandedFrame>
         )
     }
 
     // No auth source (browser environment, not logged in)
     if (!authSource) {
         return (
-            <LoginPrompt
-                onLogin={setAccessToken}
-                baseUrl={baseUrl}
-                serverUrl={serverUrl}
-                setServerUrl={setServerUrl}
-                clearServerUrl={clearServerUrl}
-            />
+            <BrandedFrame>
+                <LoginPrompt
+                    onLogin={setAccessToken}
+                    baseUrl={baseUrl}
+                    serverUrl={serverUrl}
+                    setServerUrl={setServerUrl}
+                    clearServerUrl={clearServerUrl}
+                />
+            </BrandedFrame>
         )
     }
 
     if (needsBinding) {
         return (
-            <LoginPrompt
-                mode="bind"
-                onBind={bind}
-                baseUrl={baseUrl}
-                serverUrl={serverUrl}
-                setServerUrl={setServerUrl}
-                clearServerUrl={clearServerUrl}
-                error={authError ?? undefined}
-            />
+            <BrandedFrame>
+                <LoginPrompt
+                    mode="bind"
+                    onBind={bind}
+                    baseUrl={baseUrl}
+                    serverUrl={serverUrl}
+                    setServerUrl={setServerUrl}
+                    clearServerUrl={clearServerUrl}
+                    error={authError ?? undefined}
+                />
+            </BrandedFrame>
         )
     }
 
     // Authenticating (also covers the gap before useAuth effect starts)
     if (isAuthLoading || (authSource && !token && !authError)) {
         return (
-            <div className="h-full flex items-center justify-center p-4">
-                <LoadingState label="Authorizing…" className="text-sm" />
-            </div>
+            <BrandedFrame>
+                <div className="h-full flex items-center justify-center p-4">
+                    <LoadingState label="Authorizing…" className="text-sm" />
+                </div>
+            </BrandedFrame>
         )
     }
 
@@ -236,38 +245,44 @@ export function App() {
         // If using access token and auth failed, show login again
         if (authSource.type === 'accessToken') {
             return (
-                <LoginPrompt
-                    onLogin={setAccessToken}
-                    baseUrl={baseUrl}
-                    serverUrl={serverUrl}
-                    setServerUrl={setServerUrl}
-                    clearServerUrl={clearServerUrl}
-                    error={authError ?? 'Authentication failed'}
-                />
+                <BrandedFrame>
+                    <LoginPrompt
+                        onLogin={setAccessToken}
+                        baseUrl={baseUrl}
+                        serverUrl={serverUrl}
+                        setServerUrl={setServerUrl}
+                        clearServerUrl={clearServerUrl}
+                        error={authError ?? 'Authentication failed'}
+                    />
+                </BrandedFrame>
             )
         }
 
         // Telegram auth failed
         return (
-            <div className="p-4 space-y-3">
-                <div className="text-base font-semibold">HAPImatic</div>
-                <div className="text-sm text-red-600">
-                    {authError ?? 'Not authorized'}
+            <BrandedFrame>
+                <div className="p-4 space-y-3">
+                    <div className="text-base font-semibold">HAPImatic</div>
+                    <div className="text-sm text-red-600">
+                        {authError ?? 'Not authorized'}
+                    </div>
+                    <div className="text-xs text-[var(--app-hint)]">
+                        Open this page from Telegram using the bot's "Open App" button (not "Open in browser").
+                    </div>
                 </div>
-                <div className="text-xs text-[var(--app-hint)]">
-                    Open this page from Telegram using the bot's "Open App" button (not "Open in browser").
-                </div>
-            </div>
+            </BrandedFrame>
         )
     }
 
     return (
         <AppContextProvider value={{ api, token }}>
-            <SyncingBanner isSyncing={isSyncing} />
-            <OfflineBanner />
-            <div className="h-full flex flex-col">
-                <Outlet />
-            </div>
+            <BrandedFrame>
+                <SyncingBanner isSyncing={isSyncing} />
+                <OfflineBanner />
+                <div className="h-full flex flex-col">
+                    <Outlet />
+                </div>
+            </BrandedFrame>
             <InstallPrompt />
         </AppContextProvider>
     )
