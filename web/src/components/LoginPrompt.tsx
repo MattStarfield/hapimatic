@@ -92,7 +92,7 @@ export function LoginPrompt(props: LoginPromptProps) {
 
     const displayError = error || props.error
     const serverSummary = props.serverUrl ?? `${props.baseUrl} (same origin)`
-    const title = isBindMode ? 'Bind Telegram' : 'HAPI'
+    const title = isBindMode ? 'Bind Telegram' : 'HAPImatic'
     const subtitle = 'Vibe Coding Anytime, Anywhere'
     const submitLabel = isBindMode ? 'Bind' : 'Sign In'
 
@@ -208,7 +208,7 @@ export function LoginPrompt(props: LoginPromptProps) {
             {/* Footer */}
             <div className="absolute bottom-4 left-0 right-0 text-center text-xs text-[var(--app-hint)] space-y-1">
                 <div>Designed with <span className="text-red-500">♥</span> for Vibe Coding</div>
-                <div>© {new Date().getFullYear()} HAPI</div>
+                <div>© {new Date().getFullYear()} HAPImatic</div>
             </div>
         </div>
     )
