@@ -25,6 +25,7 @@ hm-resume       # Resume last session
 hm-status       # Check service status
 hm-logs         # View logs (follow mode)
 hm-restart      # Restart service
+hm update       # Update Claude Code + HAPImatic (see Updating section)
 ```
 
 ## Installation Paths
@@ -47,24 +48,29 @@ hm-restart      # Restart service
 
 ## Updating
 
-### Update Claude Code
+### One Command Update (Recommended)
 
-Claude Code is installed separately via npm. HAPImatic uses whatever version is installed on the system.
+Update both Claude Code and HAPImatic with a single command:
 
 ```bash
-# Check current version
-claude --version
-
-# Update Claude Code
-npm update -g @anthropic-ai/claude-code
-
-# Verify update
-claude --version
+hm update
 ```
 
-### Update HAPImatic (Sync with Upstream HAPI)
+This will:
+1. Update Claude Code to the latest version via npm
+2. Fetch and merge upstream HAPI changes (if any)
+3. Rebuild and install the updated HAPImatic binary
+4. Restart the HAPImatic service
 
-When upstream HAPI has new features or fixes:
+### Manual Updates
+
+#### Update Claude Code Only
+
+```bash
+npm update -g @anthropic-ai/claude-code
+```
+
+#### Update HAPImatic Only (Sync with Upstream HAPI)
 
 ```bash
 # 1. Fetch upstream changes
