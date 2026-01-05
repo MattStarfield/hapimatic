@@ -8,6 +8,54 @@ HAPImatic is a customized fork of [HAPI](https://github.com/tiann/hapi) with per
 
 See `README.md` for full documentation and `AGENTS.md` for architecture details.
 
+---
+
+## ⚠️ CRITICAL: Server Restart Warning
+
+**STOP and WARN the user before performing ANY operation that would restart the HAPImatic server.**
+
+Restarting the HAPImatic server (port 3007) will **immediately disconnect ALL active HAPI sessions**, including:
+- Any Claude Code sessions being controlled remotely via the PWA
+- The current session if it's running through HAPImatic itself
+
+### Operations That Require Server Restart
+
+You MUST warn the user before:
+- Running `systemctl --user restart hapimatic`
+- Running `systemctl --user stop hapimatic`
+- Killing hapimatic processes (`pkill hapimatic`)
+- Replacing the binary at `~/.local/bin/hapimatic`
+- Running `hm update` (which restarts the service)
+- Any rebuild + deploy workflow
+
+### Required Warning Format
+
+Before proceeding with any restart operation, display this warning:
+
+```
+⚠️  SERVER RESTART REQUIRED
+
+This operation will restart the HAPImatic server and DISCONNECT ALL ACTIVE SESSIONS.
+
+Any Claude Code sessions currently running through HAPImatic will be terminated.
+Work in progress in other sessions may be interrupted.
+
+Are you sure you want to proceed? (Consider completing or saving work in other sessions first)
+```
+
+**Wait for explicit user confirmation before proceeding.**
+
+### Safe Operations (No Warning Needed)
+
+These do NOT require a restart:
+- Code changes without deployment
+- `bun run typecheck`, `bun run test`
+- Git operations (commit, push, pull)
+- Editing source files
+- Building without deploying (`bun run build` without copying binary)
+
+---
+
 ## Screenshots and Images
 
 **Screenshot Directory**: `/mnt/netshare/img`
