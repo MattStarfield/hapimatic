@@ -10,6 +10,22 @@ See `README.md` for full documentation and `AGENTS.md` for architecture details.
 
 ---
 
+## 🔴 CRITICAL: Repository Identity
+
+**This is MattStarfield/hapimatic, NOT tiann/hapi.**
+
+- **Our repo**: `MattStarfield/hapimatic` - ALL issues, PRs, and gh commands target HERE
+- **Upstream**: `tiann/hapi` - Reference only, NEVER create issues/PRs there
+
+When using `gh` CLI:
+- **Always verify** the default repo: `gh repo view --json nameWithOwner`
+- If incorrect, fix it: `gh repo set-default MattStarfield/hapimatic`
+- When in doubt, use explicit `--repo MattStarfield/hapimatic` flag
+
+**The user will NEVER ask you to work on upstream tiann/hapi issues.** If an issue reference seems to point to upstream, STOP and clarify with the user.
+
+---
+
 ## ⚠️ CRITICAL: Server Restart Warning
 
 **STOP and WARN the user before performing ANY operation that would restart the HAPImatic server.**
