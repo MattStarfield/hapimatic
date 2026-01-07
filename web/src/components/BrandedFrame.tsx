@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useVersion } from '@/hooks/useVersion'
 
 /**
  * BrandedFrame wraps the app content with HAPImatic branding:
@@ -7,6 +8,22 @@ import type { ReactNode } from 'react'
  * - Handles iOS safe-area-inset-top for the header
  */
 export function BrandedFrame({ children }: { children: ReactNode }) {
+    const { data: versionInfo } = useVersion()
+
+    // Format timestamp as date and time
+    const formatDateTime = (timestamp: string) => {
+        if (!timestamp) return { date: '', time: '' }
+        const d = new Date(timestamp)
+        return {
+            date: d.toLocaleDateString(),
+            time: d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+        }
+    }
+
+    const { date, time } = versionInfo?.timestamp
+        ? formatDateTime(versionInfo.timestamp)
+        : { date: '', time: '' }
+
     return (
         <div className="h-full flex flex-col bg-[var(--color-primary)]">
             {/* Branded header - handles safe area for iOS status bar */}
@@ -45,6 +62,18 @@ export function BrandedFrame({ children }: { children: ReactNode }) {
                     {children}
                 </div>
             </div>
+
+            {/* Version info in mint green area */}
+            {versionInfo ? (
+                <div className="text-center py-1">
+                    <span className="text-xs text-white">
+                        v{versionInfo.version}
+                        {date ? ` • ${date}` : ''}
+                        {time ? ` • ${time}` : ''}
+                    </span>
+                </div>
+            ) : null}
+
             {/* Bottom safe area - mint green shows through */}
             <div className="pb-[env(safe-area-inset-bottom)]" />
         </div>

@@ -121,6 +121,61 @@ systemctl --user status hapimatic --no-pager
 
 ---
 
+## Versioning
+
+HAPImatic uses semantic versioning with test identifiers for iterative development.
+
+### Version Location
+
+- **File**: `package.json` (root)
+- **Fields**: `version` and `versionTimestamp`
+- **API**: `GET /api/version` returns `{ version, timestamp }`
+- **UI**: Version displayed at bottom of session chat area
+
+### Version Format
+
+| Format | Description | Example |
+|--------|-------------|---------|
+| `X.Y.Z` | Release version | `1.0.0` |
+| `X.Y.Z-L` | Test version (L = A-Z) | `1.0.0-A` |
+
+### Version Bump Commands
+
+```bash
+bun run version:show     # Show current version
+bun run version:test     # Add/increment test ID: 1.0.0 -> 1.0.0-A -> 1.0.0-B
+bun run version:patch    # Bump patch: 1.0.0 -> 1.0.1
+bun run version:minor    # Bump minor: 1.0.0 -> 1.1.0
+bun run version:major    # Bump major: 1.0.0 -> 2.0.0
+bun run version:release  # Strip test ID + patch: 1.0.0-C -> 1.0.1
+```
+
+### When to Bump Version
+
+| Scenario | Command |
+|----------|---------|
+| Starting work on an issue | `version:test` (creates -A) |
+| Iterating/debugging within issue | `version:test` (increments letter) |
+| Releasing after issue complete | `version:release` |
+| Adding new feature | `version:minor` |
+| Fixing bug in release | `version:patch` |
+| Breaking changes | `version:major` |
+
+### Workflow Example
+
+```bash
+# Start issue #18
+bun run version:test    # 1.0.0 -> 1.0.0-A
+
+# First iteration doesn't work
+bun run version:test    # 1.0.0-A -> 1.0.0-B
+
+# Second iteration works, user approves
+bun run version:release # 1.0.0-B -> 1.0.1
+```
+
+---
+
 ## 🔴 MANDATORY: Deployment Verification Checklist
 
 **This is NON-NEGOTIABLE. You MUST complete ALL steps. Skipping ANY step is LYING to the user.**
