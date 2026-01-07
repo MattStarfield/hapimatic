@@ -121,34 +121,64 @@ systemctl --user status hapimatic --no-pager
 
 ---
 
-## 🔴 MANDATORY: Playwright Verification Before User Testing
+## 🔴 MANDATORY: Deployment Verification Checklist
 
-**You MUST verify UI changes with Playwright BEFORE asking the user to test on their device.**
+**This is NON-NEGOTIABLE. You MUST complete ALL steps. Skipping ANY step is LYING to the user.**
 
-This is a CRITICAL requirement. Do NOT skip this step. The user should NEVER be the first to discover that changes aren't working.
+After ANY deployment, you MUST run these verification commands and **explicitly confirm each one in your response**:
 
-### Required Verification Steps
+### Step 1: Verify Binary Was Actually Copied
 
-After deploying any UI changes:
+```bash
+ls -la cli/dist-exe/bun-linux-arm64/hapi ~/.local/bin/hapimatic
+```
 
-1. **Close any existing browser tabs**: `mcp__playwright__browser_close`
-2. **Navigate fresh**: `mcp__playwright__browser_navigate` to `http://localhost:3007`
-3. **Take a screenshot**: `mcp__playwright__browser_take_screenshot`
-4. **Visually inspect** the screenshot to confirm your changes are visible
-5. **Only then** inform the user that changes are ready for testing
+**REQUIRED CHECK**: Both files must have:
+- **Same file size** (byte-for-byte match)
+- **Deployed binary timestamp** must be AFTER or EQUAL to built binary
 
-### Common Pitfalls
+If sizes differ or deployed timestamp is older → **DEPLOYMENT FAILED. Do not proceed.**
 
-- **Build caching**: If changes aren't visible, delete `web/dist/` and rebuild
-- **Binary not copied**: Verify timestamps match between `cli/dist-exe/` and `~/.local/bin/hapimatic`
-- **Service not restarted**: The old binary may still be running
-- **Browser caching**: Close Playwright browser and navigate fresh
+### Step 2: Verify Correct Assets Are Being Served
 
-### Failure to Verify = Wasted User Time
+```bash
+curl -s http://localhost:3007/ | grep -E "(index-[A-Za-z0-9]+\.js|index-[A-Za-z0-9]+\.css)"
+```
 
-If you skip Playwright verification and ask the user to test, only for them to find the changes aren't working, you have:
-1. Wasted the user's time switching to their phone
-2. Damaged trust in your work quality
-3. Violated this CLAUDE.md directive
+**REQUIRED CHECK**: Compare the asset hash in the filename to what's in `web/dist/assets/`. They MUST match.
 
-**Always verify first. No exceptions.**
+If hashes don't match → **OLD BUILD IS BEING SERVED. Do not proceed.**
+
+### Step 3: Playwright Visual Verification
+
+1. `mcp__playwright__browser_close` - Close any existing tabs
+2. `mcp__playwright__browser_navigate` to `http://localhost:3007`
+3. `mcp__playwright__browser_take_screenshot`
+4. **Explicitly describe** what you see in the screenshot that confirms your specific changes
+
+### Step 4: Report to User
+
+In your response to the user, you MUST include:
+- Binary size comparison (e.g., "Built: 128,133,987 bytes, Deployed: 128,133,987 bytes ✓")
+- Asset filename being served (e.g., "Serving index-BNiNERW7.js ✓")
+- What specifically you verified in the screenshot
+
+**If you cannot confirm ALL of these, tell the user deployment failed. Do NOT say "ready for testing".**
+
+---
+
+## 🔴 ZERO TOLERANCE: Lazy Verification = Lying
+
+**Looking at a Playwright screenshot and thinking "that looks about right" is NOT verification.**
+
+You MUST:
+- Check binary timestamps and sizes with actual commands
+- Check asset filenames with actual commands
+- Explicitly state what you verified and how
+
+You MUST NOT:
+- Assume deployment succeeded because the command didn't error
+- Assume the screenshot shows the right version without checking assets
+- Tell the user something is "ready" without completing the checklist above
+
+**Violation of this section means you lied to the user. This wastes their time and destroys trust.**
