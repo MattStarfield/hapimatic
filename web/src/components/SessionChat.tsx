@@ -182,21 +182,19 @@ export function SessionChat(props: {
                         onScrollStateChange={setScrollState}
                     />
 
-                    {/* Jump to bottom button - positioned just above composer */}
+                    {/* Jump to bottom button - floating above composer */}
                     {scrollState?.showJumpButton || (scrollState?.newMessageCount ?? 0) > 0 ? (
-                        <div className="flex justify-center pb-2">
-                            <button
-                                onClick={scrollState?.scrollToBottom}
-                                className="bg-[var(--app-button)] text-[var(--app-button-text)] px-3 py-1.5 rounded-full text-sm font-medium shadow-lg animate-bounce-in z-10 min-w-[44px] min-h-[44px] flex items-center justify-center"
-                                aria-label={(scrollState?.newMessageCount ?? 0) > 0 ? `${scrollState?.newMessageCount} new messages, jump to bottom` : 'Jump to bottom'}
-                            >
-                                {(scrollState?.newMessageCount ?? 0) > 0 ? (
-                                    <>{scrollState?.newMessageCount} new message{(scrollState?.newMessageCount ?? 0) > 1 ? 's' : ''} &#8595;</>
-                                ) : (
-                                    <span className="text-lg">&#8595;</span>
-                                )}
-                            </button>
-                        </div>
+                        <button
+                            onClick={scrollState?.scrollToBottom}
+                            className="absolute bottom-[72px] left-1/2 bg-[var(--app-button)] text-[var(--app-button-text)] px-3 py-1.5 rounded-full text-sm font-medium shadow-lg animate-bounce-in z-10 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                            aria-label={(scrollState?.newMessageCount ?? 0) > 0 ? `${scrollState?.newMessageCount} new messages, jump to bottom` : 'Jump to bottom'}
+                        >
+                            {(scrollState?.newMessageCount ?? 0) > 0 ? (
+                                <>{scrollState?.newMessageCount} new message{(scrollState?.newMessageCount ?? 0) > 1 ? 's' : ''} &#8595;</>
+                            ) : (
+                                <span className="text-lg">&#8595;</span>
+                            )}
+                        </button>
                     ) : null}
 
                     <HappyComposer
