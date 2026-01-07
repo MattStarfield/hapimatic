@@ -9,29 +9,11 @@ import { HappySystemMessage } from '@/components/AssistantChat/messages/SystemMe
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/Spinner'
 
-function JumpToBottomIndicator(props: {
-    count: number
-    showButton: boolean
-    onClick: () => void
-}) {
-    // Show if: scrolled up (showButton) OR has new messages
-    if (!props.showButton && props.count === 0) {
-        return null
-    }
-
-    return (
-        <button
-            onClick={props.onClick}
-            className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-[var(--app-button)] text-[var(--app-button-text)] px-3 py-1.5 rounded-full text-sm font-medium shadow-lg animate-bounce-in z-10 min-w-[44px] min-h-[44px] flex items-center justify-center"
-            aria-label={props.count > 0 ? `${props.count} new messages, jump to bottom` : 'Jump to bottom'}
-        >
-            {props.count > 0 ? (
-                <>{props.count} new message{props.count > 1 ? 's' : ''} &#8595;</>
-            ) : (
-                <span className="text-lg">&#8595;</span>
-            )}
-        </button>
-    )
+// Exported for use in SessionChat
+export interface ScrollState {
+    showJumpButton: boolean
+    newMessageCount: number
+    scrollToBottom: () => void
 }
 
 function MessageSkeleton() {
@@ -77,6 +59,7 @@ export function HappyThread(props: {
     rawMessagesCount: number
     normalizedMessagesCount: number
     renderedMessagesCount: number
+    onScrollStateChange?: (state: ScrollState) => void
 }) {
     const viewportRef = useRef<HTMLDivElement | null>(null)
     const topSentinelRef = useRef<HTMLDivElement | null>(null)
@@ -171,6 +154,15 @@ export function HappyThread(props: {
         setAutoScrollEnabled(true)
         setNewMessageCount(0)
     }, [])
+
+    // Notify parent of scroll state changes
+    useEffect(() => {
+        props.onScrollStateChange?.({
+            showJumpButton: !autoScrollEnabled,
+            newMessageCount,
+            scrollToBottom
+        })
+    }, [autoScrollEnabled, newMessageCount, scrollToBottom, props.onScrollStateChange])
 
     // Reset state when session changes
     useEffect(() => {
@@ -330,7 +322,6 @@ export function HappyThread(props: {
                         </div>
                     </div>
                 </ThreadPrimitive.Viewport>
-                <JumpToBottomIndicator count={newMessageCount} showButton={!autoScrollEnabled} onClick={scrollToBottom} />
             </ThreadPrimitive.Root>
         </HappyChatProvider>
     )
