@@ -9,17 +9,27 @@ import { HappySystemMessage } from '@/components/AssistantChat/messages/SystemMe
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/Spinner'
 
-function NewMessagesIndicator(props: { count: number; onClick: () => void }) {
-    if (props.count === 0) {
+function JumpToBottomIndicator(props: {
+    count: number
+    showButton: boolean
+    onClick: () => void
+}) {
+    // Show if: scrolled up (showButton) OR has new messages
+    if (!props.showButton && props.count === 0) {
         return null
     }
 
     return (
         <button
             onClick={props.onClick}
-            className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-[var(--app-button)] text-[var(--app-button-text)] px-3 py-1.5 rounded-full text-sm font-medium shadow-lg animate-bounce-in z-10"
+            className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-[var(--app-button)] text-[var(--app-button-text)] px-3 py-1.5 rounded-full text-sm font-medium shadow-lg animate-bounce-in z-10 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            aria-label={props.count > 0 ? `${props.count} new messages, jump to bottom` : 'Jump to bottom'}
         >
-            {props.count} new message{props.count > 1 ? 's' : ''} &#8595;
+            {props.count > 0 ? (
+                <>{props.count} new message{props.count > 1 ? 's' : ''} &#8595;</>
+            ) : (
+                <span className="text-lg">&#8595;</span>
+            )}
         </button>
     )
 }
@@ -320,7 +330,7 @@ export function HappyThread(props: {
                         </div>
                     </div>
                 </ThreadPrimitive.Viewport>
-                <NewMessagesIndicator count={newMessageCount} onClick={scrollToBottom} />
+                <JumpToBottomIndicator count={newMessageCount} showButton={!autoScrollEnabled} onClick={scrollToBottom} />
             </ThreadPrimitive.Root>
         </HappyChatProvider>
     )
