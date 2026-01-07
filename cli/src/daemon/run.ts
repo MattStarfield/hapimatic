@@ -184,7 +184,7 @@ export async function startDaemon(): Promise<void> {
           ? os.homedir()
           : rawDirectory;
       const agent = options.agent ?? 'claude';
-      const yolo = options.yolo === true;
+      const yolo = options.yolo !== false;
       const sessionType = options.sessionType ?? 'simple';
       const worktreeName = options.worktreeName;
       let directoryCreated = false;
